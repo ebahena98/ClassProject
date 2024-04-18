@@ -17,34 +17,47 @@ const db = mysql.createConnection({
 
 
 
+// app.post("/signup", (req, res) => {
+//   // const q = "SELECT * FROM user_t WHERE user_email = ? AND user_name = ? AND user_pwd = ?";
 
-app.listen(port, (req, res) => {
-    console.log(`Server is listening on port: ${port}`);
-})
+//   const q = "INSERT INTO user_t (user_email, user_name, user_pwd) VALUES (?, ?, ?)"
 
-app.post("/signup", (req, res) => {
-  const q = "SELECT * FROM user_t WHERE user_email = ? AND user_name = ? AND user_pwd = ?";
+//   db.query(q, [req.body.email, req.body.username, req.body.password], (err, data) => {
 
-  db.query(q, [req.body.username, req.body.password, req.body.email], (err, data) => {
-    console.log(req.body);
-    if (!err) {
+//     if (err) {
+//       return res.json("Sign Up Failed");
+//     }
+    
+//     console.log(data.body);
+//     return res.json(data.body);
+  
+//   })
+// })
 
-        const newQ = "INSERT INTO user_t (`user_name`,`user_pwd`, `user_email`) VALUES (?)";
-        const values = 
-        [
-          req.body.username,
-          req.body.password,
-          req.body.email,
-        ]
-        db.query(newQ, [values], (err, data) => {
-          if (err) return res.json(err);
-          
-        })
 
-      return res.json(data.body)
+
+app.post('/signup', (req, res) => {
+  
+  const q = "SELECT * FROM user_t WHERE user_email = ? ";
+
+  db.query(q, req.body.email, (err, data) => {
+
+    if (err) {
+      console.log("NOT THE SAME EMAIL: " + err);
+
+    } else {
+      console.log("SAME EMAIL: " + res[0]);
     }
 
-    return res.json("Sign Up Failed");
   })
 
+
+})
+
+
+
+// LISTENS TO A PORT 
+
+app.listen(port, (req, res) => {
+  console.log(`Server is listening on port: ${port}`);
 })
